@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Doctor {
+  id String @id @default(uuid())
+
+  name     String
+  schedule Schedule[]
+}
+
+model Schedule {
+  id           String         @id @default(uuid())
+  Doctor       Doctor?        @relation(fields: [doctorId], references: [id])
+  doctorId     String?
+  day          DateTime
+  nodeInterval NodeInterval[]
+  Client       Client?        @relation(fields: [clientId], references: [id])
+  clientId     String?
+}
+
+model NodeInterval {
+  id String @id @default(uuid())
+
+  Schedule   Schedule? @relation(fields: [scheduleId], references: [id])
+  scheduleId String?
+  windows    Window[]
+}
+
+model Window {
+  id           String        @id @default(uuid())
+  NodeInterval NodeInterval? @relation(fields: [claimedBy], references: [id])
+  claimedBy    String?
+
+  startedAt DateTime
+}
+
+model Client {
+  id String @id @default(uuid())
+
+  name     String
+  schedule Schedule[]
+}

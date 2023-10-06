@@ -1,0 +1,25 @@
+version: '3'
+services:
+  pantheon-postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=5531
+    expose:
+      - 5531
+    ports:
+      - 5531:5531
+    volumes:
+      - db-pantheon:/var/lib/pantheon/postgresql/data
+    command: -p 5531
+    networks:
+      - dev
+volumes:
+  db-pantheon:
+    driver: local
+networks:
+  dev: 
+    driver: bridge
